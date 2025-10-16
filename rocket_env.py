@@ -13,7 +13,7 @@ class SimpleRocketEnv(gym.Env):
         self.render_mode = render_mode
         # Simulation params
         self.dt, self.m, self.g = 0.025, 3.0, 9.81
-        self.F_main, self.F_side = 400.0, 200.0
+        self.F_main, self.F_side = 200.0, 100.0
 
         # Screen & world
         self.screen_w, self.screen_h = 960, 480
@@ -33,7 +33,7 @@ class SimpleRocketEnv(gym.Env):
         self.target_w, self.target_h = 240.0, 80.0
         self.target_min_x = 300.0
         self.target_max_x = 800.0
-        self.target_vx    =  50.0   # units per second, adjust as needed
+        self.target_vx    =  20.0   # units per second, adjust as needed
 
         # Launch pad center in world coords and dim
         self.launch_pad_pos = np.array([100.0, 50.0], dtype=np.float32)
@@ -67,7 +67,7 @@ class SimpleRocketEnv(gym.Env):
 
         self.state = None
         self.last_action = 0
-        self.max_steps = 800          # maximum steps per episode
+        self.max_steps = 2000          # maximum steps per episode
         self.step_count = 0           # initialize counter
 
     def reset(self, *, seed=None, options=None):
@@ -153,14 +153,15 @@ class SimpleRocketEnv(gym.Env):
 
         # Reward & done
         terminated, truncated, reward = False, False, 0.0
+        # Di rocket_env.py - ganti reward section:
         if target_collide:
-            terminated, reward = True, -1.0
+            terminated, reward = True, 10.0  # POSITIVE reward untuk success!
         elif x<0 or x>self.screen_w or y>self.screen_h:
-            terminated, reward = True, -1.0
+            terminated, reward = True, -2.0  # Reduced penalty
         elif landed:
-            terminated, reward = True, -1.0
+            terminated, reward = True, -1.0  # Reduced penalty
         else:
-            pass
+            reward = 0.01  # Small positive reward untuk survive
 
         # check for max-step termination
         if self.step_count >= self.max_steps:
