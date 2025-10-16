@@ -13,7 +13,7 @@ obs_dim = state.shape[0]
 n_actions = env.action_space.n
 
 model = QNetwork(obs_dim, n_actions)
-model.load_state_dict(torch.load("dqn_pytorch_ep1800.pt", map_location=device))
+model.load_state_dict(torch.load("./DQN_PytorchFinal/dqn_pytorch_ep2000.pt", map_location=device))
 model.to(device)
 model.eval()
 
@@ -37,7 +37,7 @@ while not done:
 env.close()
 
 if frames:
-    imageio.mimsave("dqn_run.mp4", frames, fps=30)
+    imageio.mimsave("./DemoResult/dqn_run.mp4", frames, fps=30)
 
 print(f"Total reward episode: {total_reward:.2f}")
 print("Video disimpan sebagai dqn_run.mp4")
